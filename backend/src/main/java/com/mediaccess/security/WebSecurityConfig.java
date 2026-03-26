@@ -49,7 +49,12 @@ public class WebSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        String allowedOrigin = System.getenv("ALLOWED_ORIGIN");
+        if (allowedOrigin == null || allowedOrigin.isEmpty()) {
+            config.setAllowedOrigins(List.of("http://localhost:5173"));
+        } else {
+            config.setAllowedOrigins(List.of("http://localhost:5173", allowedOrigin));
+        }
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
         config.setAllowedHeaders(List.of("origin", "content-type", "accept", "authorization", "cookie"));
         source.registerCorsConfiguration("/**", config);
